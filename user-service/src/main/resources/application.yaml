@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: user-service
+  datasource:
+#    url: jdbc:postgresql://fitness-app-db:5432/db
+    url: jdbc:postgresql://localhost:5002/db
+    username: admin_user
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
