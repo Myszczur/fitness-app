@@ -8,4 +8,6 @@ public interface UserService {
     UserResponse getUserProfile(Long userId);
 
     UserResponse register(RegisterRequest registerRequest);
+
+    Boolean validateUser(Long userId);
 }
