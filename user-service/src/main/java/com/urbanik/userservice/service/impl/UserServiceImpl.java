@@ -32,13 +32,16 @@ public class UserServiceImpl implements UserService {
         return UserMapper.userToUserResponse(userResponse);
     }
 
+    @Override
+    public Boolean validateUser(Long userId) {
+        return userRepository.existsById(userId);
+    }
+
     private void checkUserEmail(RegisterRequest registerRequest) {
         if (userRepository.existsByEmail(registerRequest.email())) {
             throw new EmailAlreadyExistsException("Provided email already exists!");
         }
     }
-
-    //TODO: unowoześ nić
 
     private User saveUserInDb(RegisterRequest registerRequest) {
         var newUser = UserMapper.registerRequestToUser(registerRequest);
