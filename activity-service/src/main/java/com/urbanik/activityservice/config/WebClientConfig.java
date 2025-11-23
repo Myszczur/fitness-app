@@ -17,7 +17,7 @@ public class WebClientConfig {
 
     @Bean
     public WebClient userServiceWebClient(WebClient.Builder webClientBuilder) {
-        return webClientBuilder.baseUrl("http://USER-SERVICE/DESKTOP-9BDDSQ2.mshome.net")
+        return webClientBuilder.baseUrl("http://USER-SERVICE/")
                 .build();
     }
 }

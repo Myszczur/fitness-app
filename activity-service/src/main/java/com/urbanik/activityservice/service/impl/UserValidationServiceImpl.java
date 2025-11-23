@@ -1,12 +1,15 @@
 package com.urbanik.activityservice.service.impl;
 
+import com.urbanik.activityservice.exceptions.UserNotFoundException;
 import com.urbanik.activityservice.service.UserValidationService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserValidationServiceImpl implements UserValidationService {
@@ -22,12 +25,9 @@ public class UserValidationServiceImpl implements UserValidationService {
                     .bodyToMono(Boolean.class)
                     .block());
         } catch (WebClientResponseException e) {
-            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
-                System.err.println("Errpr " + e.getLocalizedMessage());
-                throw new RuntimeException("User Not Fond! ", e);
-            } else if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
-                System.err.println("Errpr " + e.getLocalizedMessage());
-                throw new RuntimeException("User Not Fond! ", e);
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND || e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+                log.error("User Not Found: {}", e.getLocalizedMessage(), e);
+                throw new UserNotFoundException("User Not Fond! -> %s".formatted(e.getLocalizedMessage()));
             }
             return false;
         }

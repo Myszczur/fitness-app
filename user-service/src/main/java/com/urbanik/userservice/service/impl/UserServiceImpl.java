@@ -9,8 +9,10 @@ import com.urbanik.userservice.repository.UserRepository;
 import com.urbanik.userservice.service.UserService;
 import com.urbanik.userservice.service.impl.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -28,17 +30,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse register(RegisterRequest registerRequest) {
         checkUserEmail(registerRequest);
-        var userResponse = saveUserInDb(registerRequest);
-        return UserMapper.userToUserResponse(userResponse);
+        var newUser = saveUserInDb(registerRequest);
+        log.info("New User Created: {}", newUser);
+        return UserMapper.userToUserResponse(newUser);
     }
 
     @Override
     public Boolean validateUser(Long userId) {
+        log.info("Calling User Validation API for id: {}", userId);
         return userRepository.existsById(userId);
     }
 
     private void checkUserEmail(RegisterRequest registerRequest) {
         if (userRepository.existsByEmail(registerRequest.email())) {
+            log.error("Email already exists! {}", registerRequest.email()); 
             throw new EmailAlreadyExistsException("Provided email already exists!");
         }
     }
