@@ -11,10 +11,12 @@ import com.urbanik.activityservice.service.ActivityService;
 import com.urbanik.activityservice.service.UserValidationService;
 import com.urbanik.activityservice.utils.ActivityMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ActivityServiceImpl implements ActivityService {
@@ -25,14 +27,16 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public ActivityResponse trackActivity(ActivityRequest activityRequest) {
-        var userIsValid = userValidationService.validateUser(activityRequest.userId());
-        if (!userIsValid) {
+        var isValidUser = userValidationService.validateUser(activityRequest.userId());
+        if (!isValidUser) {
+            log.error("Invalid User {}", activityRequest.userId());
             throw new InvalidUserInputException("Invalid User!: " + activityRequest.userId());
         }
 
         var activity = getActivity(activityRequest);
         var savedActivity = activityRepository.save(activity);
 
+        log.info("New Activity created: {}", savedActivity);
         return ActivityMapper.activityToActivityResponse(savedActivity);
     }
 
@@ -42,6 +46,7 @@ public class ActivityServiceImpl implements ActivityService {
         try {
             numericUserId = Long.parseLong(userId);
         } catch (NumberFormatException e) {
+            log.error("User ID is not a nu,eric value: {}", userId);
             throw new InvalidUserInputException("User ID must be a numeric value: " + userId);
         }
         return activityRepository.findAllByUserId(numericUserId)

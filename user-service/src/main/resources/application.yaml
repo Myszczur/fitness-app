@@ -7,8 +7,8 @@ spring:
   datasource:
     #    url: jdbc:postgresql://fitness-app-db:5432/db
     url: jdbc:postgresql://localhost:5002/db
-    username:
-    password:
+    username: admin_user
+    password: password
   jpa:
     hibernate:
       ddl-auto: update
@@ -18,3 +18,8 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    hostname: localhost
+    instance-id: ${spring.application.name}:${server.port}
