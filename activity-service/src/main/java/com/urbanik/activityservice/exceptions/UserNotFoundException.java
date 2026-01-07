@@ -1,13 +1,12 @@
 package com.urbanik.activityservice.exceptions;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.BAD_REQUEST)
-public class InvalidUserInputException extends RuntimeException {
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class UserNotFoundException extends RuntimeException {
 
-    public InvalidUserInputException(String message) {
+    public UserNotFoundException(String message) {
         super(message);
     }
 }
